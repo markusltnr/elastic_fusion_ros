@@ -1,0 +1,18 @@
+﻿<?xml version="1.0"?>
+<package format="2">
+  <name>elastic_fusion_ros</name>
+  <version>0.0.0</version>
+  <description>The elastic_fusion_ros package</description>
+
+  <maintainer email="markus.j.leitner@tuwien.ac.at">Markus Leitner</maintainer>
+
+  <license>BSD</license>
+  
+  <depend>actionlib</depend>
+  <depend>std_msgs</depend>
+  <depend>actionlib_msgs</depend>
+  <build_depend>message_generation</build_depend>
+  <exec_depend>message_runtime</exec_depend>
+  <buildtool_depend>catkin</buildtool_depend>
+
+</package>
