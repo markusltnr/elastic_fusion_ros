@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python
+#!/usr/bin/env python
 import actionlib
 import rospy
 from std_srvs.srv import Empty, EmptyRequest
@@ -14,14 +14,14 @@ class ElasticFusionROS:
         self.storage_path = '/root/share/'
 
     def execute(self, goal):
-        plane_path = os.path.join(self.rosbag_path, 'read_rosbag', 'plane_'+str(goal.id))
+        plane_path = os.path.join(self.storage_path, 'read_rosbag', 'plane_'+str(goal.id))
         print(plane_path)
-        #cmd_rosbag = ['rosbag', 'record','-b','0','-O', rosbag_filename,'/hsrb/head_rgbd_sensor/rgb/image_raw', '/hsrb/head_rgbd_sensor/depth_registered/image_raw','/tf','/tf_static','/hsrb/head_rgbd_sensor/rgb/camera_info',"__name:=my_bag"]
-        rosbag = subprocess.Popen(cmd_rosbag,stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        rosbag.kill()
-        subprocess.call(["rosnode", "kill", "/my_bag"])
-        cmd_move = ['mv', rosbag_filename, self.storage_path]
-        move = subprocess.Popen(cmd_move, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        cmd_elasticfusion = ["ElasticFusion",  "-l", "plane_3.klg", "-p", "tf.txt", "-cal", "camera_EF.cfg", "d", "2", "-c", "15", "-cv", "1e-01", "-ie", "1e-05", "-pt", "60", "-q", "-name", "scene"]
+        ef = subprocess.Popen(cmd_elasticfusion,stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        print(ef.wait())
+        print(ef.poll())
+        #rosbag.kill()
+        print('Finished')
         self.server.set_succeeded()
 if __name__ == '__main__':
   rospy.init_node('elastic_fusion_ros')
