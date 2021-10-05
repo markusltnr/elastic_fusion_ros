@@ -16,12 +16,15 @@ class ElasticFusionROS:
     def execute(self, goal):
         plane_path = os.path.join(self.storage_path, 'read_rosbag', 'plane_'+str(goal.id))
         print(plane_path)
-        cmd_elasticfusion = ["ElasticFusion",  "-l", "plane_3.klg", "-p", "tf.txt", "-cal", "camera_EF.cfg", "d", "2", "-c", "15", "-cv", "1e-01", "-ie", "1e-05", "-pt", "60", "-q", "-name", "scene"]
+        klg_file = os.path.join(plane_path, 'plane_'+str(goal.id)+'.klg')
+        trajectories_file = os.path.join(plane_path, 'planes', 'tf.txt')
+        camera_cfg_file = os.path.join(self.storage_path, 'camera_EF.cfg')
+        output_file = os.path.join(self.storage_path, 'scene_'+str(goal.id))
+        cmd_elasticfusion = ["ElasticFusion",  "-l", klg_file, "-p", trajectories_file, "-cal", camera_cfg_file, "d", "2", "-c", "15", "-cv", "1e-01", "-ie", "1e-05", "-pt", "60", "-q", "-name", output_file]
+        
         ef = subprocess.Popen(cmd_elasticfusion,stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        print(ef.wait())
-        print(ef.poll())
-        #rosbag.kill()
-        print('Finished')
+        output, error = ef.communicate()
+        print('Output was saved to {}.ply'.format(output_file))
         self.server.set_succeeded()
 if __name__ == '__main__':
   rospy.init_node('elastic_fusion_ros')
