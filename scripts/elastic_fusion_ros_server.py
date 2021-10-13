@@ -20,11 +20,10 @@ class ElasticFusionROS:
         trajectories_file = os.path.join(plane_path, 'planes', 'tf.txt')
         camera_cfg_file = os.path.join(self.storage_path, 'camera_EF.cfg')
         output_file = os.path.join(self.storage_path, 'scene_'+str(goal.id))
-        cmd_elasticfusion = ["ElasticFusion",  "-l", klg_file, "-p", trajectories_file, "-cal", camera_cfg_file, "d", "2", "-c", "15", "-cv", "1e-01", "-ie", "1e-05", "-pt", "60", "-q", "-name", output_file]
+        cmd_elasticfusion = ["ElasticFusion",  "-l", klg_file, "-cal", camera_cfg_file, "d", "2", "-c", "15", "-cv", "1e-01", "-ie", "1e-05", "-pt", "60", "-f", "-q", "-name", output_file]
         
-        ef = subprocess.Popen(cmd_elasticfusion,stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        output, error = ef.communicate()
-        print('Output was saved to {}.ply'.format(output_file))
+        ef = subprocess.Popen(cmd_elasticfusion)#,stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        ef.wait()
         self.server.set_succeeded()
 if __name__ == '__main__':
   rospy.init_node('elastic_fusion_ros')
